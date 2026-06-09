@@ -1,0 +1,27 @@
+[package]
+name = "seafi-contracts"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+stylus-sdk = "0.6.0"
+alloy-primitives = { version = "0.7.6", default-features = false }
+alloy-sol-types = { version = "0.7.6", default-features = false }
+
+[features]
+default = ["mini-alloc"]
+export-abi = ["stylus-sdk/export-abi"]
+debug = ["stylus-sdk/debug"]
+mini-alloc = ["stylus-sdk/mini-alloc"]
+
+[lib]
+name = "seafi_contracts"
+path = "src/lib.rs"
+crate-type = ["lib", "cdylib"]
+
+[profile.release]
+codegen-units = 1
+strip = true
+lto = true
+panic = "abort"
+opt-level = "z"
