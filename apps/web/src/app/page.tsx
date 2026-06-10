@@ -1,280 +1,195 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { useUser, useAuthModal, useLogout } from "@account-kit/react";
+import React from "react";
+import Link from "next/link";
+import { useUser } from "@account-kit/react";
 
 export default function Home() {
   const user = useUser();
-  const { openAuthModal } = useAuthModal();
-  const { logout } = useLogout();
 
-  // Mock interactive state for demo
-  const [streamRate, setStreamRate] = useState("0.05"); // USDC per second
-  const [accruedWage, setAccruedWage] = useState(0);
-  const [stakedBalance, setStakedBalance] = useState(1250.0);
-  const [aaveApy] = useState(5.42); // Mock Aave APY
-  const [yieldEarned, setYieldEarned] = useState(12.45);
-  const [isStreaming, setIsStreaming] = useState(true);
-
-  // Real-time counter for accrued wages and yield
-  useEffect(() => {
-    if (!isStreaming) return;
-
-    const interval = setInterval(() => {
-      // Stream wages
-      setAccruedWage((prev) => prev + parseFloat(streamRate));
-      
-      // Accrue yield on staked balance: yield = principal * (apy/100) / (seconds in a year)
-      const secondsInYear = 31536000;
-      const yieldPerSec = (stakedBalance * (aaveApy / 100)) / secondsInYear;
-      setYieldEarned((prev) => prev + yieldPerSec);
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, [isStreaming, streamRate, stakedBalance, aaveApy]);
-
-  const handleToggleStream = () => {
-    setIsStreaming(!isStreaming);
-  };
-
-  const truncateAddress = (addr: string) => {
-    if (!addr) return "";
-    return `${addr.slice(0, 6)}...${addr.slice(-4)}`;
-  };
+  const services = [
+    {
+      title: "Send Money",
+      desc: "Instant cross-border stablecoin transfers with sponsored gas and auto-yielding capability.",
+      link: "/service/sendmoney",
+      icon: (
+        <svg className="h-6 w-6 text-brand-end" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+        </svg>
+      ),
+    },
+    {
+      title: "Request Money",
+      desc: "Receive stablecoins instantly by sharing a secure payment link or QR code.",
+      link: "/service/receive",
+      icon: (
+        <svg className="h-6 w-6 text-brand-end" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+        </svg>
+      ),
+    },
+    {
+      title: "Payroll Streaming",
+      desc: "Stream salaries to employees per second. Capital efficiency unlocked via automated Aave staking.",
+      link: "/service/payroll",
+      icon: (
+        <svg className="h-6 w-6 text-brand-end" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+        </svg>
+      ),
+    },
+    {
+      title: "Smart Invoices",
+      desc: "Create professional business invoices. Paid directly to your smart wallet and instantly optimized for yield.",
+      link: "/service/make-invoice",
+      icon: (
+        <svg className="h-6 w-6 text-brand-end" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+        </svg>
+      ),
+    },
+  ];
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans antialiased selection:bg-cyan-500 selection:text-slate-900">
-      {/* Header */}
-      <header className="border-b border-slate-800 bg-slate-900/50 backdrop-blur-md sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="h-10 w-10 rounded-xl bg-gradient-to-tr from-cyan-500 to-blue-600 flex items-center justify-center shadow-lg shadow-cyan-500/20">
-              <span className="font-bold text-slate-950 text-xl tracking-tighter">S</span>
-            </div>
-            <span className="text-xl font-bold tracking-tight bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">
-              SEAFI
-            </span>
-          </div>
+    <div className="flex-1 flex flex-col justify-center py-12 md:py-24">
+      {/* Hero Section */}
+      <section className="max-w-7xl mx-auto px-6 text-center space-y-8 relative">
+        {/* Glow */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-brand-start/15 rounded-full blur-3xl pointer-events-none" />
 
-          <div className="flex items-center gap-4">
-            {user ? (
-              <div className="flex items-center gap-3 bg-slate-900 border border-slate-800 rounded-full py-1.5 pl-4 pr-1.5">
-                <span className="text-xs font-semibold text-slate-400">
-                  {user.address ? truncateAddress(user.address) : "Connected"}
-                </span>
-                <button
-                  onClick={() => logout()}
-                  className="bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white px-4 py-1.5 rounded-full text-xs font-medium transition-all"
-                >
-                  Disconnect
-                </button>
+        <div className="space-y-4 max-w-3xl mx-auto relative z-10">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-brand-end/30 bg-brand-start/10 text-brand-end text-xs font-semibold">
+            <span className="h-1.5 w-1.5 rounded-full bg-brand-end animate-pulse" />
+            Next-Gen Web3 Banking Rails
+          </div>
+          <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight text-text-primary leading-tight">
+            Seamless Cross-Border Payments,{" "}
+            <span className="bg-gradient-to-r from-brand-start to-brand-end bg-clip-text text-transparent">
+              Auto-Staked for Yield
+            </span>
+          </h1>
+          <p className="text-text-secondary text-base md:text-lg max-w-xl mx-auto leading-relaxed">
+            Send, request, and stream money instantly across Southeast Asia. Any funds resting in your smart wallet are programmatically staked in Aave V3 to earn real-time yield.
+          </p>
+        </div>
+
+        <div className="flex flex-wrap items-center justify-center gap-4 relative z-10">
+          <Link
+            href={user ? "/service/payroll" : "/auth"}
+            className="px-8 py-3.5 rounded-full bg-gradient-to-r from-brand-start to-brand-end text-white font-bold text-sm shadow-xl shadow-brand-end/20 hover:shadow-brand-end/35 hover:opacity-95 transition-all cursor-pointer"
+          >
+            {user ? "Go to Dashboard" : "Get Started Now"}
+          </Link>
+          <a
+            href="#features"
+            className="px-8 py-3.5 rounded-full bg-white border border-divider hover:bg-surface-card text-text-primary font-bold text-sm transition-all cursor-pointer shadow-sm"
+          >
+            Explore Services
+          </a>
+        </div>
+      </section>
+
+      {/* Services Grid Section */}
+      <section id="features" className="max-w-7xl mx-auto px-6 py-20 relative z-10">
+        <div className="text-center max-w-lg mx-auto mb-16 space-y-2">
+          <h2 className="text-3xl font-extrabold tracking-tight text-text-primary">
+            Our Financial Services
+          </h2>
+          <p className="text-text-secondary text-sm">
+            Everything you need for personal, business, or payroll needs, optimized for Web3.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {services.map((svc) => (
+            <Link
+              key={svc.link}
+              href={svc.link}
+              className="bg-white border border-divider hover:border-brand-start rounded-[32px] p-6 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col justify-between h-64 group cursor-pointer card-shadow"
+            >
+              <div className="space-y-4">
+                <div className="h-12 w-12 rounded-2xl bg-brand-start/10 flex items-center justify-center group-hover:scale-110 transition-transform">
+                  {svc.icon}
+                </div>
+                <div className="space-y-2">
+                  <h3 className="font-bold text-text-primary text-lg group-hover:text-brand-end transition-colors">
+                    {svc.title}
+                  </h3>
+                  <p className="text-xs text-text-secondary leading-relaxed">
+                    {svc.desc}
+                  </p>
+                </div>
               </div>
-            ) : (
-              <button
-                onClick={openAuthModal}
-                className="relative group overflow-hidden px-6 py-2.5 rounded-full bg-gradient-to-r from-cyan-500 to-blue-600 font-semibold text-slate-950 text-sm shadow-lg shadow-cyan-500/20 hover:shadow-cyan-500/30 transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0"
-              >
-                <span className="relative z-10">Connect Smart Wallet</span>
-                <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-10 transition-opacity" />
-              </button>
-            )}
+              <div className="flex items-center gap-1.5 text-xs font-bold text-brand-end group-hover:translate-x-1 transition-transform pt-4">
+                Launch Service
+                <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
+                </svg>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      {/* Yield & Aave Spotlight */}
+      <section className="max-w-7xl mx-auto px-6 pb-20 relative z-10">
+        <div className="bg-surface-card border border-divider rounded-[32px] p-8 md:p-12 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center card-shadow">
+          <div className="lg:col-span-7 space-y-6">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-emerald-500/20 bg-emerald-50 text-emerald-600 text-xs font-bold">
+              <span className="h-1.5 w-1.5 rounded-full bg-emerald-600 animate-pulse" />
+              Live Aave Yield Staking
+            </div>
+            <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-text-primary">
+              No Idle Cash. Your Capital Works for You.
+            </h2>
+            <p className="text-text-secondary text-sm leading-relaxed">
+              When an invoice is paid or your salary is streamed, the funds wait in your ERC-4337 smart wallet. Normally, this cash sits idle. SEAFI automatically route all idle balances directly to Aave V3 pools, making sure every dollar gets high-yield staking interests generated block-by-block.
+            </p>
+            <div className="flex flex-wrap gap-6 pt-4 border-t border-divider">
+              <div>
+                <span className="block text-2xl font-bold text-brand-end">5.42%</span>
+                <span className="text-[10px] text-text-secondary font-semibold uppercase tracking-wider">Mock APY</span>
+              </div>
+              <div>
+                <span className="block text-2xl font-bold text-emerald-600">Real-Time</span>
+                <span className="text-[10px] text-text-secondary font-semibold uppercase tracking-wider">Yield Accrual</span>
+              </div>
+              <div>
+                <span className="block text-2xl font-bold text-text-primary">100%</span>
+                <span className="text-[10px] text-text-secondary font-semibold uppercase tracking-wider">Non-Custodial</span>
+              </div>
+            </div>
+          </div>
+          <div className="lg:col-span-5 bg-white border border-divider rounded-[24px] p-6 space-y-4 shadow-sm">
+            <span className="text-[10px] font-bold text-text-secondary uppercase tracking-widest block">
+              Active Yield Vault
+            </span>
+            <div className="space-y-3">
+              <div className="flex justify-between items-center text-xs">
+                <span className="text-text-secondary">Staked Asset</span>
+                <span className="font-bold text-text-primary">aUSDC (Aave Arbitrum)</span>
+              </div>
+              <div className="flex justify-between items-center text-xs">
+                <span className="text-text-secondary">Total Deposits</span>
+                <span className="font-bold text-text-primary">$1,250.00 USDC</span>
+              </div>
+              <div className="flex justify-between items-center text-xs">
+                <span className="text-text-secondary">Yield Earned</span>
+                <span className="font-extrabold text-emerald-600 font-mono">+$12.45 USDC</span>
+              </div>
+            </div>
+            <div className="h-1.5 w-full bg-surface-card rounded-full overflow-hidden">
+              <div className="h-full w-4/5 bg-gradient-to-r from-brand-start to-brand-end rounded-full" />
+            </div>
+            <Link
+              href="/service/payroll"
+              className="block text-center py-2.5 rounded-xl bg-surface-card hover:bg-divider text-text-primary font-bold text-xs transition-all"
+            >
+              View Yield Dashboard
+            </Link>
           </div>
         </div>
-      </header>
-
-      {/* Main Content */}
-      <main className="flex-1 max-w-7xl mx-auto px-6 py-12 w-full grid grid-cols-1 lg:grid-cols-12 gap-8">
-        
-        {/* Left column: Hero & Overview */}
-        <section className="lg:col-span-5 flex flex-col justify-center gap-8">
-          <div className="space-y-4">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-cyan-500/30 bg-cyan-950/20 text-cyan-400 text-xs font-medium">
-              <span className="h-1.5 w-1.5 rounded-full bg-cyan-400 animate-pulse" />
-              Powered by Arbitrum Stylus & ERC-4337
-            </div>
-            <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight leading-tight">
-              Real-Time Salary{" "}
-              <span className="bg-gradient-to-r from-cyan-400 via-sky-400 to-blue-500 bg-clip-text text-transparent">
-                Streaming
-              </span>{" "}
-              & Yield Protocol
-            </h1>
-            <p className="text-slate-400 text-base md:text-lg leading-relaxed">
-              Ensure continuous payment for workers while idle capital automatically accumulates high-yield returns in Aave V3. Set up streams instantly with zero gas friction.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <div className="p-4 rounded-2xl bg-slate-900/60 border border-slate-800">
-              <span className="text-xs text-slate-500 block mb-1">STYLUS GAS EFFICIENCY</span>
-              <span className="text-2xl font-bold text-slate-100">~98.4%</span>
-              <span className="text-[10px] text-cyan-400 block mt-1">Saves gas compared to EVM</span>
-            </div>
-            <div className="p-4 rounded-2xl bg-slate-900/60 border border-slate-800">
-              <span className="text-xs text-slate-500 block mb-1">AAVE INTEGRATION</span>
-              <span className="text-2xl font-bold text-slate-100">Automatic</span>
-              <span className="text-[10px] text-blue-400 block mt-1">No manual staking required</span>
-            </div>
-          </div>
-        </section>
-
-        {/* Right column: Interactive Dashboard Mockup */}
-        <section className="lg:col-span-7 flex flex-col gap-6">
-          <div className="p-6 md:p-8 rounded-3xl bg-slate-900/40 border border-slate-800/80 backdrop-blur-xl shadow-2xl relative overflow-hidden">
-            {/* Ambient Background Glow */}
-            <div className="absolute top-0 right-0 -mt-16 -mr-16 w-64 h-64 bg-cyan-500/10 rounded-full blur-3xl" />
-            <div className="absolute bottom-0 left-0 -mb-16 -ml-16 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl" />
-
-            <div className="relative space-y-8">
-              
-              {/* Wallet Info Header */}
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-800">
-                <div>
-                  <h3 className="font-bold text-lg">Employee Dashboard</h3>
-                  <p className="text-xs text-slate-500">Real-time salary allocations</p>
-                </div>
-                {user ? (
-                  <div className="text-left sm:text-right">
-                    <span className="text-xs text-slate-500 block">Smart Account</span>
-                    <span className="text-xs font-mono text-cyan-400 font-medium">
-                      {user.address}
-                    </span>
-                  </div>
-                ) : (
-                  <div className="text-left sm:text-right">
-                    <span className="text-xs text-slate-500 block">Status</span>
-                    <span className="text-xs text-amber-500 font-medium">Demo Mode</span>
-                  </div>
-                )}
-              </div>
-
-              {/* Streaming Section */}
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2.5">
-                    <div className="h-2 w-2 rounded-full bg-emerald-500 animate-ping" />
-                    <span className="text-xs font-bold uppercase tracking-wider text-slate-400">
-                      Active Payroll Stream
-                    </span>
-                  </div>
-                  <button
-                    onClick={handleToggleStream}
-                    className={`px-4 py-1.5 rounded-full text-xs font-semibold border transition-all ${
-                      isStreaming
-                        ? "bg-emerald-950/30 border-emerald-500/30 text-emerald-400 hover:bg-emerald-900/30"
-                        : "bg-slate-800 border-slate-700 text-slate-400 hover:bg-slate-700"
-                    }`}
-                  >
-                    {isStreaming ? "Streaming Active" : "Stream Paused"}
-                  </button>
-                </div>
-
-                <div className="p-6 rounded-2xl bg-slate-950/80 border border-slate-800/60 relative overflow-hidden">
-                  <div className="flex flex-col items-center py-4 text-center">
-                    <span className="text-sm text-slate-400 mb-1">Accrued Wage Balance</span>
-                    <span className="text-4xl md:text-5xl font-mono font-bold tracking-tight text-transparent bg-gradient-to-r from-emerald-400 to-teal-300 bg-clip-text">
-                      ${accruedWage.toFixed(4)}
-                    </span>
-                    <span className="text-[10px] text-slate-500 mt-2 block">
-                      Receiving {streamRate} USDC per second
-                    </span>
-                  </div>
-
-                  {/* Range Slider for Rate Adjustment */}
-                  <div className="mt-4 pt-4 border-t border-slate-900">
-                    <label className="text-xs text-slate-500 flex justify-between mb-2">
-                      <span>Adjust Stream Rate (Employer Controls)</span>
-                      <span className="font-mono text-cyan-400 font-bold">{streamRate} USDC/sec</span>
-                    </label>
-                    <input
-                      type="range"
-                      min="0.01"
-                      max="0.25"
-                      step="0.01"
-                      value={streamRate}
-                      onChange={(e) => setStreamRate(e.target.value)}
-                      className="w-full h-1 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-cyan-500"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              {/* Yield/Aave Staking Section */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                
-                {/* Vault Principal */}
-                <div className="p-5 rounded-2xl bg-slate-950/60 border border-slate-800/60">
-                  <span className="text-xs text-slate-500 block mb-1">Staking Principal (aUSDC)</span>
-                  <div className="flex items-baseline gap-2">
-                    <span className="text-xl font-bold">${stakedBalance.toFixed(2)}</span>
-                    <span className="text-xs text-cyan-400">+{aaveApy}% APY</span>
-                  </div>
-                  <div className="mt-4 flex gap-2">
-                    <button
-                      onClick={() => setStakedBalance((prev) => prev + 100)}
-                      className="flex-1 bg-slate-900 border border-slate-800 hover:border-cyan-500/50 hover:text-cyan-400 text-xs py-2 rounded-lg font-medium transition-all"
-                    >
-                      Deposit $100
-                    </button>
-                    <button
-                      onClick={() => stakedBalance > 100 && setStakedBalance((prev) => prev - 100)}
-                      className="flex-1 bg-slate-900 border border-slate-800 hover:border-red-500/50 hover:text-red-400 text-xs py-2 rounded-lg font-medium transition-all"
-                    >
-                      Withdraw
-                    </button>
-                  </div>
-                </div>
-
-                {/* Accrued Yield */}
-                <div className="p-5 rounded-2xl bg-slate-950/60 border border-slate-800/60 flex flex-col justify-between">
-                  <div>
-                    <span className="text-xs text-slate-500 block mb-1">Aave V3 Accrued Yield</span>
-                    <span className="text-2xl font-mono font-bold text-cyan-400">
-                      ${yieldEarned.toFixed(6)}
-                    </span>
-                  </div>
-                  <button
-                    onClick={() => {
-                      setStakedBalance((prev) => prev + yieldEarned);
-                      setYieldEarned(0);
-                    }}
-                    className="w-full bg-gradient-to-r from-cyan-500/10 to-blue-600/10 hover:from-cyan-500/20 hover:to-blue-600/20 border border-cyan-500/30 text-cyan-400 text-xs py-2 rounded-lg font-medium transition-all mt-4"
-                  >
-                    Compound Yield
-                  </button>
-                </div>
-
-              </div>
-
-              {/* Action Button */}
-              {user ? (
-                <div className="flex gap-4">
-                  <button className="flex-1 py-3 px-4 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-bold text-sm shadow-lg shadow-cyan-500/10 transition-all duration-200">
-                    Withdraw Accumulated Wages
-                  </button>
-                </div>
-              ) : (
-                <button
-                  onClick={openAuthModal}
-                  className="w-full py-4 rounded-2xl bg-slate-800 hover:bg-slate-700 border border-slate-700 hover:border-slate-600 font-bold text-sm text-slate-200 transition-all flex items-center justify-center gap-2 shadow-inner"
-                >
-                  <svg className="h-4 w-4 text-cyan-400 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                  </svg>
-                  Connect Wallet to Interact
-                </button>
-              )}
-
-            </div>
-          </div>
-        </section>
-
-      </main>
-
-      {/* Footer */}
-      <footer className="border-t border-slate-900 bg-slate-950/80 py-8 text-center text-xs text-slate-500">
-        <p>© 2026 SEAFI Protocol. All rights reserved.</p>
-      </footer>
+      </section>
     </div>
   );
 }
