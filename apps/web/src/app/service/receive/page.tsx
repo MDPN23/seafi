@@ -1,11 +1,11 @@
 "use client";
 
 import React, { useState } from "react";
-import { useUser } from "@account-kit/react";
+import { usePrivy } from "@privy-io/react-auth";
 import Link from "next/link";
 
 export default function ReceiveMoneyPage() {
-  const user = useUser();
+  const { ready, authenticated, user } = usePrivy();
   const [amount, setAmount] = useState("");
   const [desc, setDesc] = useState("");
   const [isGenerated, setIsGenerated] = useState(false);
@@ -17,7 +17,7 @@ export default function ReceiveMoneyPage() {
     if (!amount) return;
 
     const randomId = Math.random().toString(36).substring(7);
-    const link = `https://seafi.protocol/pay/${randomId}?amount=${amount}&to=${user?.address || "0x71C7...7431"}`;
+    const link = `https://seafi.protocol/pay/${randomId}?amount=${amount}&to=${user?.wallet?.address || "0x71C7...7431"}`;
     setRequestLink(link);
     setIsGenerated(true);
   };

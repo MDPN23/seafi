@@ -3,12 +3,10 @@
 import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useUser, useAuthModal, useLogout } from "@account-kit/react";
+import { usePrivy } from "@privy-io/react-auth";
 
 export function Header() {
-  const user = useUser();
-  const { openAuthModal } = useAuthModal();
-  const { logout } = useLogout();
+  const { ready, authenticated, user, login, logout } = usePrivy();
   const pathname = usePathname();
 
   const truncateAddress = (addr: string) => {
@@ -57,10 +55,10 @@ export function Header() {
         </nav>
 
         <div className="flex items-center gap-4">
-          {user ? (
+          {ready && authenticated && user ? (
             <div className="flex items-center gap-3 bg-surface-card border border-divider rounded-full py-1.5 pl-4 pr-1.5">
               <span className="text-xs font-semibold text-text-secondary font-mono">
-                {user.address ? truncateAddress(user.address) : "Connected"}
+                {user.wallet?.address ? truncateAddress(user.wallet.address) : "Connected"}
               </span>
               <button
                 onClick={() => logout()}
@@ -78,7 +76,7 @@ export function Header() {
                 Login
               </Link>
               <button
-                onClick={openAuthModal}
+                onClick={login}
                 className="relative group overflow-hidden px-5 py-2 rounded-full bg-gradient-to-r from-brand-start to-brand-end font-semibold text-white text-xs shadow-lg shadow-brand-end/20 hover:shadow-brand-end/30 transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0 cursor-pointer"
               >
                 <span className="relative z-10">Connect Smart Wallet</span>

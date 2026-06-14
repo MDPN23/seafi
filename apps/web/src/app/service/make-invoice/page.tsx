@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useUser } from "@account-kit/react";
+import { usePrivy } from "@privy-io/react-auth";
 import Link from "next/link";
 
 interface Invoice {
@@ -15,7 +15,7 @@ interface Invoice {
 }
 
 export default function MakeInvoicePage() {
-  const user = useUser();
+  const { ready, authenticated, user } = usePrivy();
   const [payerName, setPayerName] = useState("");
   const [payerWallet, setPayerWallet] = useState("");
   const [amount, setAmount] = useState("");

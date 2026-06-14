@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { useUser } from "@account-kit/react";
+import { usePrivy } from "@privy-io/react-auth";
 import { createWalletClient, custom } from "viem";
 import { arbitrumSepolia } from "viem/chains";
 
@@ -13,7 +13,7 @@ interface LogEntry {
 }
 
 export function X402Playground() {
-  const user = useUser();
+  const { ready, authenticated, user } = usePrivy();
   const [logs, setLogs] = useState<LogEntry[]>([]);
   const [isRunning, setIsRunning] = useState(false);
   const [premiumData, setPremiumData] = useState<any>(null);

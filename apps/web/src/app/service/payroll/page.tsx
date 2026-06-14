@@ -1,14 +1,12 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useUser, useAuthModal, useLogout } from "@account-kit/react";
+import { usePrivy } from "@privy-io/react-auth";
 import { X402Playground } from "@/components/X402Playground";
 import { RampModal } from "@/components/RampModal";
 
 export default function PayrollPage() {
-  const user = useUser();
-  const { openAuthModal } = useAuthModal();
-  const { logout } = useLogout();
+  const { ready, authenticated, user, login, logout } = usePrivy();
 
   // Role State (switch between Employee and Employer dashboard views)
   const [activeRole, setActiveRole] = useState<"employee" | "employer">("employee");

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { AccountKitProvider } from "@/components/AccountKitProvider";
+import { PrivyProviderWrapper } from "@/components/PrivyProviderWrapper";
 import { Header } from "@/components/maincomp/Header";
 import { Footer } from "@/components/maincomp/Footer";
 
@@ -26,13 +26,13 @@ export default function RootLayout({
       className={`${inter.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col font-sans bg-white text-black grain-bg">
-        <AccountKitProvider>
+        <PrivyProviderWrapper>
           <Header />
           <main className="flex-1 flex flex-col">
             {children}
           </main>
           <Footer />
-        </AccountKitProvider>
+        </PrivyProviderWrapper>
       </body>
     </html>
   );

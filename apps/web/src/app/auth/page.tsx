@@ -1,12 +1,11 @@
 "use client";
 
 import React, { useState } from "react";
-import { useUser, useAuthModal } from "@account-kit/react";
+import { usePrivy } from "@privy-io/react-auth";
 import { useRouter } from "next/navigation";
 
 export default function AuthPage() {
-  const user = useUser();
-  const { openAuthModal } = useAuthModal();
+  const { ready, authenticated, user, login } = usePrivy();
   const router = useRouter();
 
   const [mode, setMode] = useState<"login" | "signup">("login");
@@ -16,8 +15,8 @@ export default function AuthPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
 
-  // If user is already connected via Alchemy, offer to redirect to payroll service
-  if (user) {
+  // If user is already connected via Privy, offer to redirect to payroll service
+  if (ready && authenticated && user) {
     router.push("/service/payroll");
   }
 
@@ -62,7 +61,7 @@ export default function AuthPage() {
 
         {/* Web3 Button */}
         <button
-          onClick={openAuthModal}
+          onClick={login}
           className="w-full py-3 px-4 mb-6 rounded-xl bg-gradient-to-r from-brand-start to-brand-end hover:opacity-95 text-white font-bold text-sm shadow-md shadow-brand-end/10 flex items-center justify-center gap-2 cursor-pointer transition-all"
         >
           <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">

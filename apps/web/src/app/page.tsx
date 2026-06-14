@@ -2,10 +2,10 @@
 
 import React from "react";
 import Link from "next/link";
-import { useUser } from "@account-kit/react";
+import { usePrivy } from "@privy-io/react-auth";
 
 export default function Home() {
-  const user = useUser();
+  const { ready, authenticated, user } = usePrivy();
 
   const services = [
     {
@@ -75,10 +75,10 @@ export default function Home() {
 
         <div className="flex flex-wrap items-center justify-center gap-4 relative z-10">
           <Link
-            href={user ? "/service/payroll" : "/auth"}
+            href={ready && authenticated && user ? "/service/payroll" : "/auth"}
             className="px-8 py-3.5 rounded-full bg-gradient-to-r from-brand-start to-brand-end text-white font-bold text-sm shadow-xl shadow-brand-end/20 hover:shadow-brand-end/35 hover:opacity-95 transition-all cursor-pointer"
           >
-            {user ? "Go to Dashboard" : "Get Started Now"}
+            {ready && authenticated && user ? "Go to Dashboard" : "Get Started Now"}
           </Link>
           <a
             href="#features"

@@ -1,11 +1,11 @@
 "use client";
 
 import React, { useState } from "react";
-import { useUser } from "@account-kit/react";
+import { usePrivy } from "@privy-io/react-auth";
 import Link from "next/link";
 
 export default function SendMoneyPage() {
-  const user = useUser();
+  const { ready, authenticated, user } = usePrivy();
   const [recipient, setRecipient] = useState("");
   const [amount, setAmount] = useState("");
   const [notes, setNotes] = useState("");
