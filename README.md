@@ -24,9 +24,8 @@ SEAFI is a Web3 invoicing and cross-border payment gateway designed to eliminate
 
 ### 3. 💡 Innovation: Beyond the MVP (Roadmap & Vision)
 While our hackathon MVP focuses on solving the immediate pain point of cross-border invoicing, our underlying smart contract infrastructure is designed for much more:
-* **Real-Time Payroll Streaming:** Converting monthly salaries into per-second streams, allowing for "Earned Wage Access" where employees withdraw wages as they earn them.
-* **Dynamic Yield Orchestration:** Automatically staking idle USDC into Aave V3 to generate yield for employers while funds await withdrawal.
-* **X402 Machine Economy Protocol:** Enabling AI-to-AI transactions where AI agents pay for API access on-demand via micro-transactions, bypassing rigid Web2 subscriptions.
+* **B2B Bulk Global Payouts:** Allowing agencies and companies to upload a CSV and process payments to hundreds of global contractors simultaneously in one single, gas-efficient transaction.
+* **Smart Contract Escrow (Milestone Payments):** Serving as a trustless middleman (like Upwork but without the 20% platform fee) where funds are locked in the smart contract and released automatically upon project milestone completion.
 
 ---
 
@@ -35,7 +34,6 @@ While our hackathon MVP focuses on solving the immediate pain point of cross-bor
 - **Smart Contracts:** Arbitrum Stylus (Rust), Arbitrum Sepolia/One
 - **Frontend:** Next.js 16 (App Router), Tailwind CSS
 - **Authentication & Smart Wallets:** Privy + Alchemy (ERC-4337 Account Abstraction)
-- **Yield Strategy:** Aave V3 
 - **Fiat Gateways:** Stripe Onramp, Bridge Offramp
 
 ## 🚀 Running the Project Locally
